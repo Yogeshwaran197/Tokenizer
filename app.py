@@ -27,7 +27,7 @@ try:
     token_ids = tokenizer(text)["input_ids"]
     st.write(f"**Token IDs:** {token_ids}")
 
-    st.title("Token Visualizer")
+    st.write("### Token Visualizer")
 
     # A list of background colors to cycle through
     COLORS = [
@@ -50,7 +50,7 @@ except Exception as e:
     st.error(f"Error loading tokenizer: {e}")
 
 
-st.header("Heatmap Visualization")
+st.write("### Heatmap Visualization")
 
 @st.cache_resource
 def load_model():
