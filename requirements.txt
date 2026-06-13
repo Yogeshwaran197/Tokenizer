@@ -1,3 +1,5 @@
 tiktoken
 streamlit
 transformers
+torch
+plotly
