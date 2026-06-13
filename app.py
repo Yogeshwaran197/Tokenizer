@@ -1,6 +1,8 @@
 import streamlit as st
 import tiktoken
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModel
+import plotly.express as px
+import torch
 
 
 @st.cache_resource
@@ -48,6 +50,30 @@ except Exception as e:
     st.error(f"Error loading tokenizer: {e}")
 
 
+st.header("Heatmap Visualization")
+
+@st.cache_resource
+def load_model():
+    tok = AutoTokenizer.from_pretrained("gpt2")
+    mod = AutoModel.from_pretrained("gpt2", output_attentions=True)
+    return tok,mod
+
+tokenizer, model =load_model()
+
+inputs = tokenizer(text , return_tensors="pt")
+tokens =  [tokenizer.decode([i.item()]) for i in inputs["input_ids"][0]]
+
+with torch.no_grad():
+    outputs = model(**inputs)
+
+layer = st.slider("layer", 0,11,0)
+head = st.slider("head", 0,11,0)
+
+matrix = outputs.attentions[layer][0][head].numpy()
+
+fig = px.imshow(matrix, x=tokens, y=tokens, color_continuous_scale="Blues")
+
+st.plotly_chart(fig)
 
 
 
